@@ -1,0 +1,32 @@
+# Define a política de energia para balanceada ao conectar o carregador
+if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))  
+{  
+  $arguments = "& '" +$myinvocation.mycommand.definition + "'"
+  Start-Process powershell -Verb runAs -ArgumentList $arguments
+  Break
+}
+$powerScheme = "381b4222-f694-41f0-9685-ff5bb260df2e"  # ID do plano "Equilibrado"
+powercfg /setactive $powerScheme
+
+# Limita o processador a 85% para evitar superaquecimento e picos de CPU
+powercfg /change monitor-timeout-ac 0
+powercfg /change standby-timeout-ac 0
+powercfg /change hibernate-timeout-ac 0
+powercfg /setacvalueindex $powerScheme SUB_PROCESSOR PROCTHROTTLEMAX 85
+
+# Reduz o impacto da placa de vídeo ao conectar o carregador
+$gpuTweak = "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers"
+Set-ItemProperty -Path $gpuTweak -Name "TdrDelay" -Value 8
+Set-ItemProperty -Path $gpuTweak -Name "TdrDdiDelay" -Value 8
+
+# Verifica processos pesados ao conectar e os desativa
+$processosPesados = @("LenovoVantage.exe", "OneDrive.exe", "Chrome.exe")
+foreach ($processo in $processosPesados) {
+    Stop-Process -Name $processo -Force -ErrorAction SilentlyContinue
+}
+
+# Altera a prioridade do PowerShell para máxima performance
+$process = Get-Process -Id $PID
+$process.PriorityClass = "High"
+
+Write-Host "Configurações otimizadas! Conecte o carregador e veja se melhorou." -ForegroundColor Green
