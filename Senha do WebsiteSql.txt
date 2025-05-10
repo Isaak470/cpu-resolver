@@ -1,0 +1,5 @@
+Password: oRMciSb8IKSr
+Nome do banco de dados: if0_38647141_chat_db
+Host: sql103.infinityfree.com
+Nome do usuário do banco: if0_38647141
+Servidor: sql103.byetcluster.com

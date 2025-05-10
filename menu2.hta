@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Barra de Progresso</title>
+    <hta:application id="HTAProgress" applicationname="ProgressBar" border="thin" caption="yes" showintaskbar="yes"/>
+    <script type="text/javascript">
+        function updateProgress(value) {
+            var progressBar = document.getElementById("progress");
+            var progressText = document.getElementById("progressText");
+            
+            progressBar.style.width = value + "%";
+            progressText.innerText = "Processando: " + value + "%";
+
+            switch (value) {
+                case 10: log("Iniciando processo..."); break;
+                case 50: log("Carregando módulos..."); break;
+                case 100: log("Estabelecendo conexões..."); break;
+                case 150: log("Quase lá..."); break;
+                case 200: log("Concluído!"); break;
+            }
+        }
+        
+        function startProgress() {
+            let progress = 0;
+            let interval = setInterval(function() {
+                if (progress > 200) {
+                    clearInterval(interval);
+                    log("Processo concluído!");
+                } else {
+                    updateProgress((progress / 200) * 100);
+                    progress++;
+                }
+            }, 50);
+        }
+        
+        function log(message) {
+            document.getElementById("log").innerHTML += message + "<br>";
+        }
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #progressContainer {
+            width: 80%;
+            background-color: #ddd;
+            border: 1px solid #000;
+            height: 25px;
+            position: relative;
+        }
+        #progress {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+        }
+    </style>
+</head>
+<body onload="startProgress()">
+    <h2>Barra de Progresso</h2>
+    <div id="progressContainer">
+        <div id="progress"></div>
+    </div>
+    <p id="progressText">Processando: 0%</p>
+    <div id="log"></div>
+</body>
+</html>

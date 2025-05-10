@@ -1,0 +1,7 @@
+open ftpupload.net
+if0_38647141
+oRMciSb8IKSr
+cd htdocs
+get mes.cdat
+get log.cdat
+bye
